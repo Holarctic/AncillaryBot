@@ -69,7 +69,7 @@ public class GetDisciplinedModule implements Module {
             for (final User user : users) {
                 breakMessage += user.getNicknameMentionTag() + " ";
             }
-            breakMessage += "Great work! You've completed " + sessionsCompleted + "/" + sessionsCreated " sessions! Time to take a break and check in!";
+            breakMessage += "Great work! You've completed " + sessionsCompleted + "/" + sessionsCreated + " sessions! Time to take a break and check in!";
             if (session.isEnabled()) {
                 new MessageBuilder()
                         .setContent(breakMessage)
@@ -93,9 +93,9 @@ public class GetDisciplinedModule implements Module {
                     breakOverMessage += "Break time has ended now, time to go back to work. ";
                     session.setSessionsRemaining(sessionsRemaining - 1);
                     if (sessionsRemaining == 1) {
-                        breakOverMessage += sessionsRemaining + " session remaining."
+                        breakOverMessage += sessionsRemaining + " session remaining.";
                     } else {
-                        breakOverMessage += sessionsRemaining + " sessions remaining."
+                        breakOverMessage += sessionsRemaining + " sessions remaining.";
                     }
                     startSessionTimer(session, channelToUpdate);
                 } else {
