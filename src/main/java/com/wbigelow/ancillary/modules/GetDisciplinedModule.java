@@ -50,6 +50,8 @@ public class GetDisciplinedModule implements Module {
     private void startSessionTimer(final Session session, final TextChannel channelToUpdate) {
         final int sessionID = session.getSessionID();
         final int sessionsRemaining = session.getSessionsRemaining();
+        final int sessionsCreated = session.getSessionsCreated();
+        final int sessionsCompleted = sessionsCreated - sessionsRemaining +1; // +1 so it is number of session and not index
         new Thread(() -> {
             try {
                 session.setWorkTimeElapsed(0);
@@ -67,7 +69,7 @@ public class GetDisciplinedModule implements Module {
             for (final User user : users) {
                 breakMessage += user.getNicknameMentionTag() + " ";
             }
-            breakMessage += "Great work! Time to take a break and check in!";
+            breakMessage += "Great work! You've completed " + sessionsCompleted + "/" + sessionsCreated " sessions! Time to take a break and check in!";
             if (session.isEnabled()) {
                 new MessageBuilder()
                         .setContent(breakMessage)
@@ -88,8 +90,13 @@ public class GetDisciplinedModule implements Module {
                     breakOverMessage += user.getNicknameMentionTag() + " ";
                 }
                 if (sessionsRemaining > 1) {
-                    breakOverMessage += "Break time has ended now, time to go back to work.";
+                    breakOverMessage += "Break time has ended now, time to go back to work. ";
                     session.setSessionsRemaining(sessionsRemaining - 1);
+                    if (sessionsRemaining == 1) {
+                        breakOverMessage += sessionsRemaining + " session remaining."
+                    } else {
+                        breakOverMessage += sessionsRemaining + " sessions remaining."
+                    }
                     startSessionTimer(session, channelToUpdate);
                 } else {
                     breakOverMessage += "You've completed all your sessions."
@@ -112,6 +119,7 @@ public class GetDisciplinedModule implements Module {
         final int sessionID;
         final User creator;
         final List<User> members;
+        final int sessionsCreated; // Number of sessions created
         @Setter
         int sessionsRemaining;
         @Setter
@@ -199,6 +207,7 @@ public class GetDisciplinedModule implements Module {
                     .creator(author)
                     .members(users)
                     .sessionsRemaining(sessionNumber)
+                    .sessionsCreated(sessionNumber)
                     .sessionDuration(sessionDuration)
                     .sessionBreak(sessionBreak)
                     .isEnabled(true)
